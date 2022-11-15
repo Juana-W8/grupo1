@@ -2,37 +2,40 @@ package com.SistemaMarticulas.Matriculas.model;
 
 import java.util.Objects;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document
 public class Estudiante {
-	
-	private Long identificacion;
+	@Id
+	private Long id;
+	private String identificacion;
 	private String nombre;
 	private String apellido;
-	private Long curso;
+	private String curso;
 	private String estadoMatricula;
-	private float montoMatricula;
+	private String montoMatricula;
 	private String estadoPago;
 	
 	public Estudiante() {
 		
 	}
-	
-	public Estudiante(Long identificacion, String nombre, String apellido, Long curso, String estadoMatricula,
-			float montoMatricula, String estadoPago) {
-		super();
-		this.identificacion = identificacion;
-		this.nombre = nombre;
-		this.apellido = apellido;
-		this.curso = curso;
-		this.estadoMatricula = estadoMatricula;
-		this.montoMatricula = montoMatricula;
-		this.estadoPago = estadoPago;
+
+
+
+	public Long getId() {
+		return id;
 	}
 
-	public Long getIdentificacion() {
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getIdentificacion() {
 		return identificacion;
 	}
 
-	public void setIdentificacion(Long identificacion) {
+	public void setIdentificacion(String identificacion) {
 		this.identificacion = identificacion;
 	}
 
@@ -52,11 +55,11 @@ public class Estudiante {
 		this.apellido = apellido;
 	}
 
-	public Long getCurso() {
+	public String getCurso() {
 		return curso;
 	}
 
-	public void setCurso(Long curso) {
+	public void setCurso(String curso) {
 		this.curso = curso;
 	}
 
@@ -68,11 +71,11 @@ public class Estudiante {
 		this.estadoMatricula = estadoMatricula;
 	}
 
-	public float getMontoMatricula() {
+	public String getMontoMatricula() {
 		return montoMatricula;
 	}
 
-	public void setMontoMatricula(float montoMatricula) {
+	public void setMontoMatricula(String montoMatricula) {
 		this.montoMatricula = montoMatricula;
 	}
 
@@ -86,7 +89,7 @@ public class Estudiante {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(apellido, curso, estadoMatricula, estadoPago, identificacion, montoMatricula, nombre);
+		return Objects.hash(apellido, curso, estadoMatricula, estadoPago, id, identificacion, montoMatricula, nombre);
 	}
 
 	@Override
@@ -100,17 +103,20 @@ public class Estudiante {
 		Estudiante other = (Estudiante) obj;
 		return Objects.equals(apellido, other.apellido) && Objects.equals(curso, other.curso)
 				&& Objects.equals(estadoMatricula, other.estadoMatricula)
-				&& Objects.equals(estadoPago, other.estadoPago) && Objects.equals(identificacion, other.identificacion)
-				&& Float.floatToIntBits(montoMatricula) == Float.floatToIntBits(other.montoMatricula)
-				&& Objects.equals(nombre, other.nombre);
+				&& Objects.equals(estadoPago, other.estadoPago) && id == other.id
+				&& Objects.equals(identificacion, other.identificacion)
+				&& Objects.equals(montoMatricula, other.montoMatricula) && Objects.equals(nombre, other.nombre);
 	}
 
 	@Override
 	public String toString() {
-		return "Estudiante [identificacion=" + identificacion + ", nombre=" + nombre + ", apellido=" + apellido
-				+ ", curso=" + curso + ", estadoMatricula=" + estadoMatricula + ", montoMatricula=" + montoMatricula
-				+ ", estadoPago=" + estadoPago + "]";
+		return "Estudiante [id=" + id + ", identificacion=" + identificacion + ", nombre=" + nombre + ", apellido="
+				+ apellido + ", curso=" + curso + ", estadoMatricula=" + estadoMatricula + ", montoMatricula="
+				+ montoMatricula + ", estadoPago=" + estadoPago + "]";
 	}
+	
+
+	
 	
 	
 }
