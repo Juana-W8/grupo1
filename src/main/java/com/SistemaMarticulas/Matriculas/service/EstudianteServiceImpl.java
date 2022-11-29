@@ -12,6 +12,7 @@ import com.SistemaMarticulas.Matriculas.repository.EstudinateRepository;
 
 
 
+
 @Service
 public class EstudianteServiceImpl implements EstudianteService {
 
@@ -25,12 +26,12 @@ public class EstudianteServiceImpl implements EstudianteService {
 
 	@Override
 	public Optional<Estudiante> getEstudianteById(Long id) {
-		if (id == null) {
-			return Optional.empty();
-		}
+
 		return repository.findById(id);
 	}
 
+
+	
 	@Override
 	public Estudiante crearEstudiante(Estudiante estudiante) {
 		if (estudiante == null) {
@@ -67,13 +68,6 @@ public class EstudianteServiceImpl implements EstudianteService {
 
 	}
 
-	@Override
-	public List<Estudiante> getEstudianteByCurso(String curso) {
-		if (curso.isEmpty()) {
-			return null;
-		}
-		return repository.FindByCruso(curso);
 
-	}
 
 }

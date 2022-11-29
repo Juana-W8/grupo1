@@ -22,6 +22,7 @@ import com.SistemaMarticulas.Matriculas.service.EstudianteService;
 
 
 
+
 @RequestMapping("/api/estudiantes")
 @RestController
 public class EstudianteController {
@@ -38,10 +39,6 @@ public class EstudianteController {
 		return ResponseEntity.status(HttpStatus.OK).body(servicio.getEstudianteById(id));
 	}
 	
-	@GetMapping("/{curso}")
-	public ResponseEntity<?> getEstudianteByCurso (@PathVariable String curso){
-		return ResponseEntity.status(HttpStatus.OK).body(servicio.getEstudianteByCurso(curso));
-	}
 	
 	@PostMapping
 	public ResponseEntity<?> crear(@RequestBody Estudiante estudiante){
