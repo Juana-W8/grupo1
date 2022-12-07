@@ -43,8 +43,8 @@ export default {
         return {
             texto: "Listado de estudiantes",
             url: "http://localhost:8080/api/estudiantes",
-            estudiantes: []
-
+            estudiantes: [],
+            token: ""
         }
     },
     methods: {
@@ -54,7 +54,7 @@ export default {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'Basic dXNlcjozNmM4ZjIxOS1hOTAzLTQ5M2YtODAwMS0yYzBiYTdhZWI0Y2M='
+                    'Authorization': 'Bearer '+this.token
 
                 }
             };
@@ -69,10 +69,35 @@ export default {
                     throw error;
                 }
             })
+        },
+        solicitarToken(){
+            const opciones = {
+                method:'POST',
+                headers:{
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    usuario: "prueba",
+                    clave: "123"
+                })
+            };
+            fetch("http://localhost:8080/api/token", opciones).then(async (response)=>{
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log(data);
+                    this.token= data.token;
+                } else {
+                    const error = new Error(response.statusText);
+                    error.json = response.json();
+                    console.log(error.message);
+                    throw error;
+                }
+            })
         }
     },
     beforeMount() {
         this.consultaEstudiantes();
+        this.solicitarToken();
     }
 
 }

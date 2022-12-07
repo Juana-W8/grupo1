@@ -122,9 +122,6 @@
 </template>
 
 <script>
-import { onBeforeMount } from 'vue';
-
-
 export default {
     data() {
         return {
@@ -139,7 +136,8 @@ export default {
             montoMatricula: "",
             estadoPago: "",
             estadoMatricula: "",
-            estudiantes: []
+            estudiantes: [],
+            token: ""
         }
     },
     methods: {
@@ -158,7 +156,7 @@ export default {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'Basic dXNlcjozNmM4ZjIxOS1hOTAzLTQ5M2YtODAwMS0yYzBiYTdhZWI0Y2M='
+                    'Authorization': 'Bearer '+this.token
 
                 },
                 body: JSON.stringify({
@@ -194,7 +192,7 @@ export default {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'Basic dXNlcjozNmM4ZjIxOS1hOTAzLTQ5M2YtODAwMS0yYzBiYTdhZWI0Y2M='
+                    'Authorization': 'Bearer '+this.token
 
                 },
                 body: JSON.stringify({
@@ -216,6 +214,30 @@ export default {
                     console.log(data);
                     this.limpiarFormulario();
 
+                } else {
+                    const error = new Error(response.statusText);
+                    error.json = response.json();
+                    console.log(error.message);
+                    throw error;
+                }
+            })
+        },
+        solicitarToken(){
+            const opciones = {
+                method:'POST',
+                headers:{
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    usuario: "prueba",
+                    clave: "123"
+                })
+            };
+            fetch("http://localhost:8080/api/token", opciones).then(async (response)=>{
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log(data);
+                    this.token= data.token;
                 } else {
                     const error = new Error(response.statusText);
                     error.json = response.json();
@@ -251,7 +273,7 @@ export default {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'Basic dXNlcjozNmM4ZjIxOS1hOTAzLTQ5M2YtODAwMS0yYzBiYTdhZWI0Y2M='
+                    'Authorization': 'Bearer '+this.token
 
                 }
             };
@@ -268,9 +290,13 @@ export default {
             })
 
         }
+    },
+    beforeMount() {
+        this.solicitarToken();
     }
 
 };
+
 
 </script>
 
