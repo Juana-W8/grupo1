@@ -4,6 +4,8 @@ import java.util.Arrays;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,7 +17,7 @@ import org.springframework.web.cors.CorsConfiguration;
 
 @SuppressWarnings("deprecation")
 @SpringBootApplication
-public class MatriculasApplication {
+public class MatriculasApplication extends SpringBootServletInitializer {
 
 	public static void main(String[] args) {
 		SpringApplication.run(MatriculasApplication.class, args);
@@ -38,10 +40,16 @@ public class MatriculasApplication {
             .antMatchers(HttpMethod.POST,"/api/token").permitAll()
             .antMatchers(HttpMethod.POST,"/api/usuarios").permitAll()
             .antMatchers(HttpMethod.GET, "/api/estudiantes").hasAuthority("admin")
+            .antMatchers(HttpMethod.DELETE, "/api/estudiantes").hasAuthority("admin")
             .anyRequest().authenticated()
             .and()
             .csrf().disable().cors().configurationSource(request -> configuration);
         }
     }
+	
+	@Override
+	protected SpringApplicationBuilder configure(SpringApplicationBuilder spring) {
+		return spring.sources(MatriculasApplication.class);
+	}
 }
 

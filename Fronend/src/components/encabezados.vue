@@ -17,7 +17,7 @@ export default {
         return {
             titulo: "Nombre del colegio",
             subtitulo: "Sistema de matriculas",
-            logotipo:"/Logo.png",
+            logotipo:"/src/assets/Logo.png",
             logotipo2: "https://images.vexels.com/media/users/3/224234/isolated/lists/ff7c525c1c3e1bef640644542001e1fd-logotipo-de-la-escuela-en-linea.png"
         }
     }

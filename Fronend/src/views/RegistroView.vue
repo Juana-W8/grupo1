@@ -4,7 +4,7 @@
             {{ texto }}
         </h1>
         <div class="container">
-            <form id="formularioestudiantes" class="row g-3">
+            <form id="formularioestudiantes" class="row g-3"  v-on:submit.prevent="limpiarFormulario">
 
                 <div class="col-6">
                     <label for="id" class="form-label">ID</label>
@@ -69,55 +69,59 @@
             </form>
         </div>
     </div>
-    <h2 class="titulos">{{texto2}}</h2>
-    <div >
+    <h2 class="titulos">{{ texto2 }}</h2>
+    <div>
         <div class="contenido">
-            <form id="formularioestudiantes" class="row g-3">
-
+            <form id="formularioestudiantes" class="row g-3" v-on:submit.prevent="buscarEstudiante">
+                
                 <div class="col-3">
                     <label for="id" class="form-label">ID</label>
-                    <input v-model="id" type="number" class="form-control" id="id" placeholder="Digite el ID">
+                    <input v-model="id2" type="number" class="form-control" id="id" placeholder="Digite el ID">
                 </div>
 
                 <div>
                     <button @click="buscarEstudiante" class="boton col-3">Buscar estudiante</button>
                     <button @click="eliminarEstudiante" class="boton col-3">Eliminar estudiante</button>
                 </div>
-                
+
             </form>
-            
+
         </div>
     </div>
 
     <div id="buscarEstudiante">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">ID</th>
-                            <th scope="col">Identificacion</th>
-                            <th scope="col">Nombre</th>
-                            <th scope="col">Apellido</th>
-                            <th scope="col">Curso</th>
-                            <th scope="col">Monto de la matricula</th>
-                            <th scope="col">Estado del pago</th>
-                            <th scope="col">Estado de la matricula</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="estudiante in estudiantes">
-                            <td>{{ estudiante.id }}</td>
-                            <td>{{ estudiante.identificacion }}</td>
-                            <td>{{ estudiante.nombre }}</td>
-                            <td>{{ estudiante.apellido }}</td>
-                            <td>{{ estudiante.curso }}</td>
-                            <td>{{ estudiante.montoMatricula }}</td>
-                            <td>{{ estudiante.estadoPago }}</td>
-                            <td>{{ estudiante.estadoMatricula }}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Identificacion</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Apellido</th>
+                    <th scope="col">Curso</th>
+                    <th scope="col">Monto de la matricula</th>
+                    <th scope="col">Estado del pago</th>
+                    <th scope="col">Estado de la matricula</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-if= "(estudiantes == null)">
+                    <td :colspan="6">no existe el estudiante</td>
+                    
+                </tr>
+                <tr v-else>
+                    <td>{{ estudiantes.id }}</td>
+                    <td>{{ estudiantes.identificacion }}</td>
+                    <td>{{ estudiantes.nombre }}</td>
+                    <td>{{ estudiantes.apellido }}</td>
+                    <td>{{ estudiantes.curso }}</td>
+                    <td>{{ estudiantes.montoMatricula }}</td>
+                    <td>{{ estudiantes.estadoPago }}</td>
+                    <td>{{ estudiantes.estadoMatricula }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
 
 </template>
 
@@ -127,8 +131,9 @@ export default {
         return {
             texto: "Información de estudiantes",
             texto2: "Busqueda",
-            url: "http://localhost:8080/api/estudiantes",
+            url: "http://150.136.99.250:8080/matriculas/api/",
             id: "",
+            id2: 0,
             identificacion: "",
             nombre: "",
             apellido: "",
@@ -143,6 +148,7 @@ export default {
     methods: {
         limpiarFormulario() {
             this.id = 0;
+            this.id2 = 0;
             this.identificacion = "";
             this.nombre = "";
             this.apellido = "";
@@ -152,11 +158,12 @@ export default {
             this.montoMatricula = "";
         },
         crearEstudiante() {
-            const opciones = {
+
+            const opciones2 = {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'Bearer '+this.token
+                    'Authorization': 'Bearer ' + this.token
 
                 },
                 body: JSON.stringify({
@@ -172,7 +179,7 @@ export default {
 
                 })
             };
-            fetch(this.url, opciones).then(async (response) => {
+            fetch(this.url + "estudiantes", opciones2).then(async (response) => {
                 if (response.ok) {
                     const data = await response.json();
                     console.log(data);
@@ -186,15 +193,20 @@ export default {
                     throw error;
                 }
             })
+
+
+
         },
         actualizarEstudiante() {
-            const opciones = {
+
+            const opciones2 = {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'Bearer '+this.token
+                    'Authorization': 'Bearer ' + this.token
 
                 },
+
                 body: JSON.stringify({
 
                     id: this.id,
@@ -208,7 +220,7 @@ export default {
 
                 })
             };
-            fetch(this.url + "/" + this.id, opciones).then(async (response) => {
+            fetch(this.url + "estudiantes/" + this.id, opciones2).then(async (response) => {
                 if (response.ok) {
                     const data = await response.json();
                     console.log(data);
@@ -221,11 +233,12 @@ export default {
                     throw error;
                 }
             })
+
         },
-        solicitarToken(){
+        solicitarToken() {
             const opciones = {
-                method:'POST',
-                headers:{
+                method: 'POST',
+                headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
@@ -233,11 +246,11 @@ export default {
                     clave: "123"
                 })
             };
-            fetch("http://localhost:8080/api/token", opciones).then(async (response)=>{
+            fetch(this.url + "token", opciones).then(async (response) => {
                 if (response.ok) {
                     const data = await response.json();
                     console.log(data);
-                    this.token= data.token;
+                    this.token = data.token;
                 } else {
                     const error = new Error(response.statusText);
                     error.json = response.json();
@@ -247,19 +260,23 @@ export default {
             })
         },
         buscarEstudiante() {
-            const opciones = {
+            const id = this.id2;
+            const opciones2 = {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'Basic dXNlcjozNmM4ZjIxOS1hOTAzLTQ5M2YtODAwMS0yYzBiYTdhZWI0Y2M='
+                    'Authorization': 'Bearer ' + this.token
 
                 }
             };
-            fetch(this.url + "/" + this.id, opciones).then(async (response) => {
+            fetch(this.url + "estudiantes/" + this.id2, opciones2).then(async (response) => {
+                console.log(this.token);
                 if (response.ok) {
                     this.estudiantes = await response.json();
                     console.log(this.estudiantes);
+                    this.limpiarFormulario();
                 } else {
+                    alert("El estudiante con id: "+id+" no existe");
                     const error = new Error(response.statusText);
                     error.json = response.json();
                     console.log(error.message);
@@ -267,17 +284,19 @@ export default {
                 }
             })
 
+
         },
         eliminarEstudiante() {
-            const opciones = {
+
+            const opciones2 = {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'Bearer '+this.token
+                    'Authorization': 'Bearer ' + this.token
 
                 }
             };
-            fetch(this.url + "/" + this.id, opciones).then(async (response) => {
+            fetch(this.url + "estudiantes/" + this.id2, opciones2).then(async (response) => {
                 if (response.ok) {
                     data = await response.json();
                     console.log(data);
@@ -295,8 +314,7 @@ export default {
         this.solicitarToken();
     }
 
-};
-
+}
 
 </script>
 

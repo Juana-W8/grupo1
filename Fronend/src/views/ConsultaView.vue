@@ -42,7 +42,7 @@ export default {
     data() {
         return {
             texto: "Listado de estudiantes",
-            url: "http://localhost:8080/api/estudiantes",
+            url: "http://150.136.99.250:8080/matriculas/",
             estudiantes: [],
             token: ""
         }
@@ -50,30 +50,10 @@ export default {
     methods: {
 
         consultaEstudiantes() {
-            const opciones = {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer '+this.token
 
-                }
-            };
-            fetch(this.url, opciones).then(async (response) => {
-                if (response.ok) {
-                    this.estudiantes = await response.json();
-                    console.log(this.estudiantes);
-                } else {
-                    const error = new Error(response.statusText);
-                    error.json = response.json();
-                    console.log(error.message);
-                    throw error;
-                }
-            })
-        },
-        solicitarToken(){
             const opciones = {
-                method:'POST',
-                headers:{
+                method: 'POST',
+                headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
@@ -81,11 +61,60 @@ export default {
                     clave: "123"
                 })
             };
-            fetch("http://localhost:8080/api/token", opciones).then(async (response)=>{
+            console.log(this.token)
+
+            fetch(this.url+"api/token", opciones).then(async (response) => {
                 if (response.ok) {
                     const data = await response.json();
                     console.log(data);
-                    this.token= data.token;
+                    this.token = data.token;
+                    console.log(this.token);
+                    const opciones2 = {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Bearer ' + this.token
+
+                        }
+                    };
+                    fetch(this.url+"api/estudiantes", opciones2).then(async (response) => {
+                        if (response.ok) {
+                            this.estudiantes = await response.json();
+                            console.log(this.estudiantes);
+
+                        } else {
+                            const error = new Error(response.statusText);
+                            error.json = response.json();
+                            console.log(error.message);
+                            throw error;
+                        }
+                    })
+                } else {
+                    const error = new Error(response.statusText);
+                    error.json = response.json();
+                    console.log(error.message);
+                    throw error;
+                }
+            })
+
+        },
+        solicitarToken() {
+            const opciones = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    usuario: "prueba",
+                    clave: "123"
+                })
+            };
+            fetch(this.url+"api/token", opciones).then(async (response) => {
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log(data);
+                    this.token = data.token;
+                    console.log(this.token);
                 } else {
                     const error = new Error(response.statusText);
                     error.json = response.json();
